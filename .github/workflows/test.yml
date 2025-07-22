@@ -10,9 +10,9 @@ jobs:
     name: "CD"
     uses: wolken-technik/MyLua/.github/workflows/iac-ibm-cd.yml@main
     with:
-      filechanged: '${{ inputs.pipeline_scope }}/environment/${{ inputs.environment }}/${{ inputs.resource_folder_name }}/${{ inputs.resource_name }}.yml'
-      environment: ${{ inputs.environment }}
-      pr_number: ${{ inputs.pr_number }}
-      deployment_action: ${{ inputs.deployment_action }}
-      config_data: ${{ inputs.config_data }}      
+      filechanged: 'test/test.yml'
+      environment: 'dev'
+      pr_number: '1'
+      deployment_action: 'test'
+      config_data: 'test'
     secrets: inherit
