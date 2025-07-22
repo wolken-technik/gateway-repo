@@ -1,6 +1,11 @@
 name: IAC - IBM
 run-name: PR - ${{ inputs.pr_number }} - ENV - ${{ inputs.environment }} - ACTION - ${{ inputs.deployment_action }} - RESOURCE - ${{ inputs.resource_name }} - FOLDER - ${{ inputs.resource_folder_name }}
 
+
+permissions:
+  contents: write
+  actions: write
+  
 on:
 
   workflow_dispatch:
@@ -8,6 +13,8 @@ on:
 jobs:
   cd-dev:
     name: "CD"
+    permissions:
+      contents: write  # Override to allow commit/push    
     uses: wolken-technik/MyLua/.github/workflows/iac-ibm-cd.yml@main
     with:
       filechanged: 'test/test.yml'
