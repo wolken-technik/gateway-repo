@@ -3,70 +3,7 @@ run-name: PR - ${{ inputs.pr_number }} - ENV - ${{ inputs.environment }} - ACTIO
 
 on:
 
-
-  workflow_call:
-    inputs:
-      environment:
-        required: true
-        type: string
-      filechanged:
-        required: true
-        type: string        
-      pr_number:
-        required: true
-        type: string
-      deployment_action:
-        required: true
-        type: string
-        default: apply
-      config_data:
-        required: false
-        type: string
-      auth_token:
-        required: false
-        type: string
-
   workflow_dispatch:
-    inputs:
-      pr_number:
-        description: PR Number to be deployment manually
-        required: true
-      deployment_action:
-        description: 'Select the terraform action to perform'
-        type: choice        
-        required: true
-        default: 'plan'
-        options:
-          - 'plan'
-          - 'apply'
-          - 'destroy'
-      environment:
-        description: 'Select the environment to perform the action'
-        type: choice        
-        required: true
-        default: 'plan'
-        options:
-          - 'np-plt'
-          - 'p-plt'
-      resource_name:
-        description: 'Select the resource to perform the action'
-        type: choice        
-        required: true
-        default: 'plan'
-        options:
-          - 'tfstate'
-          - 'rg'
-      resource_folder_name:
-        description: 'Folder name of the resource to perform the action'
-        required: true
-      config_data:
-        required: false
-        type: string
-      pipeline_scope:
-        required: false
-        type: string
-        default: 'iac/ibm'
-
 
 jobs:
   cd-dev:
