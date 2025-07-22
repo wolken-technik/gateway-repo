@@ -1,0 +1,81 @@
+name: IAC - IBM
+run-name: PR - ${{ inputs.pr_number }} - ENV - ${{ inputs.environment }} - ACTION - ${{ inputs.deployment_action }} - RESOURCE - ${{ inputs.resource_name }} - FOLDER - ${{ inputs.resource_folder_name }}
+
+on:
+
+
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      filechanged:
+        required: true
+        type: string        
+      pr_number:
+        required: true
+        type: string
+      deployment_action:
+        required: true
+        type: string
+        default: apply
+      config_data:
+        required: false
+        type: string
+      auth_token:
+        required: false
+        type: string
+
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: PR Number to be deployment manually
+        required: true
+      deployment_action:
+        description: 'Select the terraform action to perform'
+        type: choice        
+        required: true
+        default: 'plan'
+        options:
+          - 'plan'
+          - 'apply'
+          - 'destroy'
+      environment:
+        description: 'Select the environment to perform the action'
+        type: choice        
+        required: true
+        default: 'plan'
+        options:
+          - 'np-plt'
+          - 'p-plt'
+      resource_name:
+        description: 'Select the resource to perform the action'
+        type: choice        
+        required: true
+        default: 'plan'
+        options:
+          - 'tfstate'
+          - 'rg'
+      resource_folder_name:
+        description: 'Folder name of the resource to perform the action'
+        required: true
+      config_data:
+        required: false
+        type: string
+      pipeline_scope:
+        required: false
+        type: string
+        default: 'iac/ibm'
+
+
+jobs:
+  cd-dev:
+    name: "CD"
+    uses: wolken-technik/MyLua/.github/workflows/iac-ibm-cd.yml@main
+    with:
+      filechanged: '${{ inputs.pipeline_scope }}/environment/${{ inputs.environment }}/${{ inputs.resource_folder_name }}/${{ inputs.resource_name }}.yml'
+      environment: ${{ inputs.environment }}
+      pr_number: ${{ inputs.pr_number }}
+      deployment_action: ${{ inputs.deployment_action }}
+      config_data: ${{ inputs.config_data }}      
+    secrets: inherit
