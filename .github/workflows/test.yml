@@ -11,15 +11,64 @@ on:
   workflow_dispatch:
 
 jobs:
-  cd-dev:
-    name: "CD"
-    permissions:
-      contents: write  # Override to allow commit/push    
-    uses: wolken-technik/MyLua/.github/workflows/iac-ibm-cd.yml@main
-    with:
-      filechanged: 'test/test.yml'
-      environment: 'dev'
-      pr_number: '1'
-      deployment_action: 'test'
-      config_data: 'test'
-    secrets: inherit
+  # cd-dev:
+  #   name: "CD"
+  #   permissions:
+  #     contents: write  # Override to allow commit/push    
+  #   uses: wolken-technik/MyLua/.github/workflows/iac-ibm-cd.yml@main
+  #   with:
+  #     filechanged: 'test/test.yml'
+  #     environment: 'dev'
+  #     pr_number: '1'
+  #     deployment_action: 'test'
+  #     config_data: 'test'
+  #   secrets: inherit
+
+
+
+
+  initiator:
+    name: "INITIATOR | ${{ matrix.scope_type_matrix }}"
+    runs-on: ubuntu-22.04
+    
+    
+    steps:
+    
+      - name: "Checkout DevOps Utilities"
+        shell: bash
+        run: |
+          git clone https://x-access-token:${{ secrets.repo_pat }}@github.com/wolken-technik/MyLua \
+            ../.MyLua \
+            --single-branch \
+            --depth 1 \
+            --branch main
+
+
+      - name: Fetch Changed Files
+        uses: ./../.MyLua/.github/workflows/iac-ibm-cd.yml@main
+        with:
+          filechanged: 'test/test.yml'
+          environment: 'dev'
+          pr_number: '1'
+          deployment_action: 'test'
+          config_data: 'test'
+        
+
+
+
+      # - name: Fetch Changed Files
+      #   if: failure()
+      #   uses: ./../.MyLua/.github/actions/common-data-retrieval/fetch-pr-changed-files
+      #   id: fetch-pr-changed-files
+      #   with:
+      #     pr_number: ${{ env.ORC_PR_NUMBER }}
+      #     commit_head_sha: ${{ env.ORC_PR_COMMIT_SHA }}
+      #     repo_pat: ${{ secrets.repo_pat }}
+      #     pipeline_name: "orc"
+      #     # pipeline_name: ${{ env.ORC_PIPELINE_SCOPE }}
+      #     API_REPO_NAME_ENV: ${{ github.repository }}
+      #     action_path: ${{env.ACTION_PATH}}/common-data-retrieval/fetch-pr-changed-files
+      #     event_name: "pull_request"
+      #     # event_name: ${{ env.ORC_PIPELINE_STACK }}
+      #     # NEED TO FIX
+    
